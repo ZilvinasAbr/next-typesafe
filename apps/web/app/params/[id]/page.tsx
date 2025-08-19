@@ -17,9 +17,14 @@ export default createPage({
   paramsSchema: z.object({
     id: z.string(),
   }),
-  page: async ({ searchParams }) => {
+  page: async ({ searchParams, params }) => {
     const name = (await searchParams).name;
+    const id = (await params).id;
 
-    return <div>Hello World {name}</div>;
+    return (
+      <div>
+        Hello World {name} {id}
+      </div>
+    );
   },
 });
