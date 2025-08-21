@@ -1,12 +1,31 @@
 import { ReactNode } from "react";
 import { z } from "zod";
 
-class PageBuilder<TState = {}> {
+// Type to represent valid search params structure
+type ValidSearchParamsRecord = {
+  [key: string]: string | string[] | undefined;
+};
+
+// Type to check if a Zod schema represents a valid search params structure
+type IsValidSearchParamsSchema<T> =
+  T extends z.ZodObject<infer Shape>
+    ? Shape extends Record<
+        string,
+        | z.ZodString
+        | z.ZodArray<z.ZodString>
+        | z.ZodOptional<z.ZodString>
+        | z.ZodOptional<z.ZodArray<z.ZodString>>
+      >
+      ? T
+      : never
+    : never;
+
+class PageBuilder<TState = object> {
   private searchParamsSchema?: z.ZodTypeAny;
   private paramsSchema?: z.ZodTypeAny;
 
   searchParams<T extends z.ZodTypeAny>(
-    schema: T
+    schema: IsValidSearchParamsSchema<T>
   ): PageBuilder<TState & { searchParams: Promise<z.infer<T>> }> {
     const builder = new PageBuilder<
       TState & { searchParams: Promise<z.infer<T>> }
@@ -62,6 +81,6 @@ class PageBuilder<TState = {}> {
   }
 }
 
-export function createPage(): PageBuilder<{}> {
+export function createPage(): PageBuilder<object> {
   return new PageBuilder();
 }
