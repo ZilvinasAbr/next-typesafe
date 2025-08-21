@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
-    "@repo/next-safe-page": "workspace:*",
+    "@repo/next-typesafe": "workspace:*",
     "next": "^15.4.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

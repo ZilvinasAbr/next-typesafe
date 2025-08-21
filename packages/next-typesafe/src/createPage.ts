@@ -6,6 +6,11 @@ type ValidSearchParamsRecord = {
   [key: string]: string | string[] | undefined;
 };
 
+// Type to represent valid params structure
+type ValidParamsRecord = {
+  [key: string]: string;
+};
+
 // Type to check if a Zod schema represents a valid search params structure
 type IsValidSearchParamsSchema<T> =
   T extends z.ZodObject<infer Shape>
@@ -16,6 +21,14 @@ type IsValidSearchParamsSchema<T> =
         | z.ZodOptional<z.ZodString>
         | z.ZodOptional<z.ZodArray<z.ZodString>>
       >
+      ? T
+      : never
+    : never;
+
+// Type to check if a Zod schema represents a valid params structure
+type IsValidParamsSchema<T> =
+  T extends z.ZodObject<infer Shape>
+    ? Shape extends Record<string, z.ZodString>
       ? T
       : never
     : never;
@@ -36,7 +49,7 @@ class PageBuilder<TState = object> {
   }
 
   params<T extends z.ZodTypeAny>(
-    schema: T
+    schema: IsValidParamsSchema<T>
   ): PageBuilder<TState & { params: Promise<z.infer<T>> }> {
     const builder = new PageBuilder<TState & { params: Promise<z.infer<T>> }>();
     builder.searchParamsSchema = this.searchParamsSchema;

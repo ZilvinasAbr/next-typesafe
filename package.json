@@ -1,5 +1,5 @@
 {
-  "name": "next-safe-page",
+  "name": "next-typesafe",
   "private": true,
   "scripts": {
     "build": "turbo run build",

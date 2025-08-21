@@ -1,4 +1,4 @@
-import { createPage } from "@repo/next-safe-page/createPage";
+import { createPage } from "@repo/next-typesafe/createPage";
 import * as z from "zod/v4";
 
 export default createPage()
