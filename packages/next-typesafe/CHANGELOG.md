@@ -1,3 +1,10 @@
+## [0.2.2](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.2.1...v0.2.2) (2025-08-23)
+
+
+### Bug Fixes
+
+* remove duplicate README.md. delete unused packages/ui library. ([6ef8942](https://github.com/ZilvinasAbr/next-typesafe/commit/6ef89429813b918dc4412fad26b52c327a8af23b))
+
 ## [0.2.1](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.2.0...v0.2.1) (2025-08-23)
 
 
