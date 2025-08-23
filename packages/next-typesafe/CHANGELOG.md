@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.2...v0.3.3) (2025-08-23)
+
+
+### Bug Fixes
+
+* empty PageType is now Record<string, never> rather than empty interface ([56cbe0d](https://github.com/ZilvinasAbr/next-typesafe/commit/56cbe0dec441438f92f83481dad1d89a2ed8223a))
+
 ## [0.3.2](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.1...v0.3.2) (2025-08-23)
 
 
