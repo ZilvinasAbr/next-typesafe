@@ -297,6 +297,13 @@ export default createPage<PageType>()
 - **Next.js** 15.0.0+ (App Router) and supports only async `params` and `searchParams`
 - **Zod** v3 or v4 should work. In future other libraries will be supported.
 
+## Future roadmap
+
+- Type-safe navigation with `params` and `searchParams`.
+- Middleware support for `createPage`: ability to run code before rendering the page component.
+- Support for other validation libraries (e.g. Valibot, Arktype).
+- Support for older Next.js versions.
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
