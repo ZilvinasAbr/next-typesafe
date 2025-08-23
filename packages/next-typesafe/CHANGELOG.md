@@ -1,3 +1,15 @@
+# [0.3.0](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.2.2...v0.3.0) (2025-08-23)
+
+
+### Bug Fixes
+
+* remove incorrect version from changelog file ([337bab5](https://github.com/ZilvinasAbr/next-typesafe/commit/337bab53dfcd907af374f4bc7abc1060984a85d3))
+
+
+### Features
+
+* add support for enum searchParams. ([ae776ef](https://github.com/ZilvinasAbr/next-typesafe/commit/ae776ef79e1345c9a743c89bebd7dd7bb7ea9247))
+
 ## [0.2.2](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.2.1...v0.2.2) (2025-08-23)
 
 ### Bug Fixes
