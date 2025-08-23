@@ -17,8 +17,10 @@ type IsValidSearchParamsSchema<T> =
     ? Shape extends Record<
         string,
         | z.ZodString
+        | z.ZodEnum<any>
         | z.ZodArray<z.ZodString>
         | z.ZodOptional<z.ZodString>
+        | z.ZodOptional<z.ZodEnum<any>>
         | z.ZodOptional<z.ZodArray<z.ZodString>>
       >
       ? T
