@@ -33,15 +33,31 @@ type IsValidParamsSchema<T> =
       : never
     : never;
 
-class PageBuilder<TState = object> {
+// Type to extract params from PageType
+type ExtractParams<T> = T extends { params: infer P } ? P : never;
+
+// Type to validate that params schema matches PageType
+type ValidateParamsSchema<TPageType, TSchema> = 
+  TPageType extends { params: unknown }
+    ? TSchema extends z.ZodObject<z.ZodRawShape>
+      ? ExtractParams<TPageType> extends z.infer<TSchema>
+        ? z.infer<TSchema> extends ExtractParams<TPageType>
+          ? TSchema
+          : never
+        : never
+      : never
+    : TSchema;
+
+class PageBuilder<TState = object, TPageType = unknown> {
   private searchParamsSchema?: z.ZodTypeAny;
   private paramsSchema?: z.ZodTypeAny;
 
   searchParams<T extends z.ZodTypeAny>(
     schema: IsValidSearchParamsSchema<T>
-  ): PageBuilder<TState & { searchParams: Promise<z.infer<T>> }> {
+  ): PageBuilder<TState & { searchParams: Promise<z.infer<T>> }, TPageType> {
     const builder = new PageBuilder<
-      TState & { searchParams: Promise<z.infer<T>> }
+      TState & { searchParams: Promise<z.infer<T>> },
+      TPageType
     >();
     builder.searchParamsSchema = schema;
     builder.paramsSchema = this.paramsSchema;
@@ -49,9 +65,9 @@ class PageBuilder<TState = object> {
   }
 
   params<T extends z.ZodTypeAny>(
-    schema: IsValidParamsSchema<T>
-  ): PageBuilder<TState & { params: Promise<z.infer<T>> }> {
-    const builder = new PageBuilder<TState & { params: Promise<z.infer<T>> }>();
+    schema: ValidateParamsSchema<TPageType, IsValidParamsSchema<T>>
+  ): PageBuilder<TState & { params: Promise<z.infer<T>> }, TPageType> {
+    const builder = new PageBuilder<TState & { params: Promise<z.infer<T>> }, TPageType>();
     builder.searchParamsSchema = this.searchParamsSchema;
     builder.paramsSchema = schema;
     return builder;
@@ -94,6 +110,9 @@ class PageBuilder<TState = object> {
   }
 }
 
-export function createPage(): PageBuilder<object> {
-  return new PageBuilder();
+// Force explicit generic parameter by making TPageType required
+export function createPage<TPageType = never>(): TPageType extends never 
+  ? { error: "TPageType generic parameter is required. Import your PageType and use: createPage<PageType>()" }
+  : PageBuilder<object, TPageType> {
+  return new PageBuilder<object, TPageType>() as any;
 }

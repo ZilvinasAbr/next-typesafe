@@ -1,7 +1,8 @@
 import { createPage } from "next-typesafe";
 import * as z from "zod/v4";
+import type { PageType } from "./_page-type";
 
-export default createPage()
+export default createPage<PageType>()
   .params(
     z.object({
       id: z.string(),
