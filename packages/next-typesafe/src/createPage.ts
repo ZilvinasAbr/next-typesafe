@@ -22,6 +22,12 @@ type IsValidSearchParamsSchema<T> =
         | z.ZodOptional<z.ZodString>
         | z.ZodOptional<z.ZodEnum<any>>
         | z.ZodOptional<z.ZodArray<z.ZodString>>
+        | z.ZodDefault<z.ZodString>
+        | z.ZodDefault<z.ZodEnum<any>>
+        | z.ZodDefault<z.ZodArray<z.ZodString>>
+        | z.ZodDefault<z.ZodOptional<z.ZodString>>
+        | z.ZodDefault<z.ZodOptional<z.ZodEnum<any>>>
+        | z.ZodDefault<z.ZodOptional<z.ZodArray<z.ZodString>>>
       >
       ? T
       : never

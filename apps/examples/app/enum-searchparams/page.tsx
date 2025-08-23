@@ -5,7 +5,9 @@ import { z } from "zod";
 export default createPage<PageType>()
   .searchParams(
     z.object({
-      theme: z.enum(["light", "dark"]),
+      theme: z.enum(["light", "dark"]).optional().default("light"),
+      defaultRequired: z.enum(["light", "dark"]).default("light"),
+      optional: z.enum(["light", "dark"]).optional(),
     })
   )
   .page(async ({ searchParams }) => {
