@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.0...v0.3.1) (2025-08-23)
+
+
+### Bug Fixes
+
+* symlink root README.md to package README.md ([0a8aa4d](https://github.com/ZilvinasAbr/next-typesafe/commit/0a8aa4df9bf4a4e6a4580f5c9445d3c477ac7e58))
+
 # [0.3.0](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.2.2...v0.3.0) (2025-08-23)
 
 
