@@ -1,5 +1,6 @@
-import { createPage } from "@repo/next-typesafe/createPage";
+import { createPage } from "next-typesafe";
 import * as z from "zod/v4";
+
 export default createPage()
   .searchParams(
     z.object({
