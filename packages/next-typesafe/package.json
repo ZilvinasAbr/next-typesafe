@@ -1,6 +1,6 @@
 {
   "name": "next-typesafe",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Next.js library to bring full type-safety to Next.js",
   "main": "dist/createPage.js",
   "types": "dist/createPage.d.ts",

@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.2.0...v0.2.1) (2025-08-23)
+
+
+### Bug Fixes
+
+* revert incorrect bump of major version ([71abfee](https://github.com/ZilvinasAbr/next-typesafe/commit/71abfee4a084c41427634c19eb0a74ccfc0c202d))
+
 # 1.0.0 (2025-08-23)
 
 
