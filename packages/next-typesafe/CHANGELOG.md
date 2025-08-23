@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.1...v0.3.2) (2025-08-23)
+
+
+### Bug Fixes
+
+* support `searchParams` enum when using `.default()` ([33dfd46](https://github.com/ZilvinasAbr/next-typesafe/commit/33dfd46d74b3c4c8b1ffc9b28ee560ea4e74df04))
+
 ## [0.3.1](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.0...v0.3.1) (2025-08-23)
 
 
