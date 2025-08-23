@@ -1,135 +1,313 @@
-# Turborepo starter
+# next-typesafe
 
-This Turborepo starter is maintained by the Turborepo core team.
+**Bring full type-safety to Next.js App Router pages with automatic type generation and runtime validation.**
 
-## Using this example
+`next-typesafe` provides a type-safe wrapper for Next.js pages that validates route parameters and search parameters at runtime using Zod schemas, while automatically generating TypeScript interfaces for your routes.
 
-Run the following command:
+## ✨ Features
 
-```sh
-npx create-turbo@latest
+- 🎯 **Full Type Safety** - Get complete TypeScript support for route and search parameters
+- 🔍 **Runtime Validation** - Validate parameters using Zod schemas with detailed error handling
+- 🤖 **Automatic Type Generation** - CLI tool generates TypeScript interfaces for all your routes
+- 🚀 **Zero Config** - Works out of the box with Next.js App Router
+- 🔄 **Promise-based** - Compatible with Next.js 15+ async components
+- 📝 **IntelliSense** - Full autocomplete and type checking in your IDE
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+npm install next-typesafe zod
 ```
 
-## What's inside?
+### 1. Generate Page Types
 
-This Turborepo includes the following packages/apps:
+Add a script to your `package.json`:
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```json
+{
+  "scripts": {
+    "typesafe": "next-typesafe generate-types"
+  }
+}
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Run the type generation:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```bash
+npm run typesafe
 ```
 
-### Develop
+This will scan your `app/` directory and generate `_page-type.ts` files next to each `page.tsx`.
 
-To develop all apps and packages, run the following command:
+### 2. Use in Your Pages
 
-```
-cd my-turborepo
+Import the generated `PageType` and use it with `createPage`:
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+```typescript
+// app/search/page.tsx
+import { createPage } from 'next-typesafe';
+import { z } from 'zod';
+import type { PageType } from './_page-type';
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+const searchParamsSchema = z.object({
+  q: z.string().min(1),
+  page: z.string().optional(),
+  category: z.array(z.string()).optional(),
+});
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+export default createPage<PageType>()
+  .searchParams(searchParamsSchema)
+  .page(async ({ searchParams }) => {
+    const { q, page, category } = await searchParams;
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+    return (
+      <div>
+        <h1>Search Results for "{q}"</h1>
+        {page && <p>Page: {page}</p>}
+        {category && <p>Categories: {category.join(', ')}</p>}
+      </div>
+    );
+  });
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## 📖 Usage Examples
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+### Simple Page (No Parameters)
 
+```typescript
+// app/about/page.tsx
+import { createPage } from 'next-typesafe';
+import type { PageType } from './_page-type';
+
+export default createPage<PageType>()
+  .page(async () => {
+    return <div>About Us</div>;
+  });
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+### Dynamic Routes with Parameters
+
+```typescript
+// app/posts/[slug]/page.tsx
+import { createPage } from 'next-typesafe';
+import { z } from 'zod';
+import type { PageType } from './_page-type';
+
+const paramsSchema = z.object({
+  slug: z.string(),
+});
+
+export default createPage<PageType>()
+  .params(paramsSchema)
+  .page(async ({ params }) => {
+    const { slug } = await params;
+
+    return <h1>Post: {slug}</h1>;
+  });
 ```
 
-## Useful Links
+### Complex Example with Both Parameters
 
-Learn more about the power of Turborepo:
+```typescript
+// app/users/[id]/posts/page.tsx
+import { createPage } from 'next-typesafe';
+import { z } from 'zod';
+import type { PageType } from './_page-type';
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+const paramsSchema = z.object({
+  id: z.string().regex(/^\d+$/, "Must be numeric"),
+});
+
+const searchParamsSchema = z.object({
+  status: z.enum(['published', 'draft', 'archived']).optional(),
+  sort: z.enum(['date', 'title', 'views']).default('date'),
+  limit: z.string().regex(/^\d+$/).transform(Number).optional(),
+});
+
+export default createPage<PageType>()
+  .params(paramsSchema)
+  .searchParams(searchParamsSchema)
+  .page(async ({ params, searchParams }) => {
+    const { id } = await params;
+    const { status, sort, limit } = await searchParams;
+
+    return (
+      <div>
+        <h1>Posts by User {id}</h1>
+        <p>Status filter: {status || 'all'}</p>
+        <p>Sort by: {sort}</p>
+        {limit && <p>Limit: {limit}</p>}
+      </div>
+    );
+  });
+```
+
+### Advanced Zod Validation
+
+```typescript
+const searchParamsSchema = z.object({
+  // Required string with validation
+  email: z.string().email("Invalid email format"),
+
+  // Optional with default value
+  theme: z.enum(["light", "dark"]).default("light"),
+
+  // String array (e.g., ?tags=react&tags=nextjs)
+  tags: z.array(z.string()).optional(),
+
+  // Transform string to number
+  page: z.string().regex(/^\d+$/).transform(Number).default("1"),
+
+  // Date validation
+  from: z.string().datetime().optional(),
+
+  // Custom validation
+  priority: z
+    .string()
+    .refine((val) => ["low", "medium", "high"].includes(val), {
+      message: "Priority must be low, medium, or high",
+    })
+    .optional(),
+});
+```
+
+## 🛠️ CLI Tool
+
+The `next-typesafe` CLI automatically generates TypeScript interfaces for your routes:
+
+```bash
+npx next-typesafe generate-types
+```
+
+### Generated Types
+
+For a route like `app/users/[id]/posts/[slug]/page.tsx`, it generates:
+
+```typescript
+// app/users/[id]/posts/[slug]/_page-type.ts
+export interface PageParams {
+  id: string;
+  slug: string;
+}
+
+export interface PageType {
+  params: PageParams;
+}
+```
+
+For routes without parameters:
+
+```typescript
+// app/about/_page-type.ts
+export interface PageType {
+  // No dynamic params for this route
+}
+```
+
+## 🔧 API Reference
+
+### `createPage<PageType>()`
+
+Creates a type-safe page builder. **Requires** a `PageType` generic parameter.
+
+```typescript
+import type { PageType } from "./_page-type";
+
+const pageBuilder = createPage<PageType>();
+```
+
+### `.searchParams(schema)`
+
+Adds search parameter validation with a Zod schema.
+
+**Supported Zod types:**
+
+- `z.string()` / `z.string().optional()`
+- `z.array(z.string())` / `z.array(z.string()).optional()`
+- `z.enum()`, `z.boolean()`, `z.number()` (as strings)
+- Transformations with `.transform()`
+- Default values with `.default()`
+
+### `.params(schema)`
+
+Adds route parameter validation with a Zod schema.
+
+**Requirements:**
+
+- Must be a `z.object()` with string properties only
+- Must match the route's dynamic segments
+- TypeScript will enforce schema matches the generated `PageType`
+
+### `.page(component)`
+
+Defines the page component.
+
+**Function signatures:**
+
+- No validation: `() => Promise<ReactNode>`
+- With validation: `({ params, searchParams }) => Promise<ReactNode>`
+
+## 🎯 Type Safety Features
+
+### Compile-time Validation
+
+```typescript
+// ✅ This works - schema matches PageType
+const paramsSchema = z.object({
+  id: z.string(),
+  slug: z.string(),
+});
+
+// ❌ This fails - missing 'slug' parameter
+const badSchema = z.object({
+  id: z.string(),
+  // slug is missing!
+});
+```
+
+### Required Generics
+
+```typescript
+// ❌ This fails - PageType generic is required
+createPage().page(() => <div>Hello</div>);
+
+// ✅ This works - PageType provided
+createPage<PageType>().page(() => <div>Hello</div>);
+```
+
+### Parameter Type Safety
+
+```typescript
+export default createPage<PageType>()
+  .params(paramsSchema)
+  .searchParams(searchParamsSchema)
+  .page(async ({ params, searchParams }) => {
+    // params and searchParams are fully typed!
+    const { id } = await params; // string
+    const { tags } = await searchParams; // string[] | undefined
+
+    // TypeScript autocomplete and validation works!
+  });
+```
+
+## 📋 Requirements
+
+- **Next.js** 15.0.0+ (App Router) and supports only async `params` and `searchParams`
+- **Zod** v3 or v4 should work. In future other libraries will be supported.
+
+## Future roadmap
+
+- Type-safe navigation with `params` and `searchParams`.
+- Middleware support for `createPage`: ability to run code before rendering the page component.
+- Support for other validation libraries (e.g. Valibot, Arktype).
+- Support for older Next.js versions.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+MIT © [Žilvinas Abromavičius](https://github.com/ZilvinasAbr)
