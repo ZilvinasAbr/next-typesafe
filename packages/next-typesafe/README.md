@@ -1,5 +1,7 @@
 # next-typesafe
 
+> ⚠️ **Early Beta Warning**: This package is in early beta. APIs may change frequently and breaking changes may occur in minor versions. Use with caution in production environments.
+
 **Bring full type-safety to Next.js App Router pages with automatic type generation and runtime validation.**
 
 `next-typesafe` provides a type-safe wrapper for Next.js pages that validates route parameters and search parameters at runtime using Zod schemas, while automatically generating TypeScript interfaces for your routes.
