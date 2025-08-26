@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.3...v0.4.0) (2025-08-26)
+
+
+### Features
+
+* use Next.js's new version's 15.5 auto-generated page types instead of generating ourselves. ([db62683](https://github.com/ZilvinasAbr/next-typesafe/commit/db626836bb7bd40d811d20c37a888d8482703938))
+
 ## [0.3.3](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.2...v0.3.3) (2025-08-23)
 
 ### Bug Fixes
