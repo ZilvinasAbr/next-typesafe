@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 import { z } from 'zod';
-import type { PageProps, AppRoutes } from './types';
+import type { PageProps, AppRoutes, Register } from './types';
 
 // Re-export types for users
-export type { PageProps, AppRoutes } from './types';
+export type { PageProps, AppRoutes, Register } from './types';
 
 // Type to extract route parameters from our PageProps
 type ExtractParams<T> =

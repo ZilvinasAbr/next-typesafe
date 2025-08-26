@@ -10,18 +10,9 @@ export interface PageProps<TPath extends string = string> {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-// Module augmentation interface for users to extend
-declare global {
-  namespace NextTypesafe {
-    interface Register {
-      // Users must augment this interface - no default provided
-      // routes: string; // This should be overridden by user
-    }
-  }
+// Export the interface that will be augmented by users
+export interface Register {
+  // This will be augmented by users via module declaration
 }
 
-// Extract the routes type from the Register interface
-// If not augmented, this will be never, forcing users to define their routes
-export type AppRoutes = NextTypesafe.Register extends { routes: infer R }
-  ? R
-  : never;
+export type AppRoutes = Register extends { routes: infer R } ? R : never;
