@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.4.0...v0.4.1) (2025-08-26)
+
+
+### Bug Fixes
+
+* update type declarations and module augmentation for next-typesafe ([074bf1a](https://github.com/ZilvinasAbr/next-typesafe/commit/074bf1a9f3806eb29e790de161440a237a382f75))
+
 # [0.4.0](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.3...v0.4.0) (2025-08-26)
 
 
