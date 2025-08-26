@@ -7,7 +7,35 @@
 
 import { createPage } from '../createPage';
 import { z } from 'zod';
-import './test-routes'; // Import test route types
+
+// Test routes - comprehensive list for all test files
+declare global {
+  namespace NextTypesafe {
+    interface Register {
+      routes:
+        | '/category/[category]'
+        | '/shop/[category]/[subcategory]'
+        | '/products/[category]'
+        | '/items/[id]/[category]'
+        | '/posts/[category]'
+        | '/levels/[level]'
+        | '/countries/[country]'
+        | '/api/[version]'
+        | '/docs/[section]'
+        | '/basic/[category]'
+        | '/multi/[cat]/[sub]'
+        | '/optional/[type]'
+        | '/default/[status]'
+        | '/numeric/[level]'
+        | '/mixed/[id]/[type]'
+        | '/geo/[country]'
+        | '/search'
+        | '/products'
+        | '/browse'
+        | '/filter';
+    }
+  }
+}
 
 // Test Case 1: Basic z.enum() support
 interface BasicEnumPageType {

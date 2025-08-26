@@ -7,7 +7,8 @@
 
 import { createPage } from '../createPage';
 import { z } from 'zod';
-import './test-routes'; // Import test route types
+
+// Route types are declared in enum-params.test.ts
 
 // Test runtime behavior with enum validation
 interface EnumPageType {
