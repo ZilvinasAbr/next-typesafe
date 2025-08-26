@@ -1,35 +1,30 @@
 ## [0.3.3](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.2...v0.3.3) (2025-08-23)
 
-
 ### Bug Fixes
 
-* empty PageType is now Record<string, never> rather than empty interface ([56cbe0d](https://github.com/ZilvinasAbr/next-typesafe/commit/56cbe0dec441438f92f83481dad1d89a2ed8223a))
+- empty PageType is now Record<string, never> rather than empty interface ([56cbe0d](https://github.com/ZilvinasAbr/next-typesafe/commit/56cbe0dec441438f92f83481dad1d89a2ed8223a))
 
 ## [0.3.2](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.1...v0.3.2) (2025-08-23)
 
-
 ### Bug Fixes
 
-* support `searchParams` enum when using `.default()` ([33dfd46](https://github.com/ZilvinasAbr/next-typesafe/commit/33dfd46d74b3c4c8b1ffc9b28ee560ea4e74df04))
+- support `searchParams` enum when using `.default()` ([33dfd46](https://github.com/ZilvinasAbr/next-typesafe/commit/33dfd46d74b3c4c8b1ffc9b28ee560ea4e74df04))
 
 ## [0.3.1](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.3.0...v0.3.1) (2025-08-23)
 
-
 ### Bug Fixes
 
-* symlink root README.md to package README.md ([0a8aa4d](https://github.com/ZilvinasAbr/next-typesafe/commit/0a8aa4df9bf4a4e6a4580f5c9445d3c477ac7e58))
+- symlink root README.md to package README.md ([0a8aa4d](https://github.com/ZilvinasAbr/next-typesafe/commit/0a8aa4df9bf4a4e6a4580f5c9445d3c477ac7e58))
 
 # [0.3.0](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.2.2...v0.3.0) (2025-08-23)
 
-
 ### Bug Fixes
 
-* remove incorrect version from changelog file ([337bab5](https://github.com/ZilvinasAbr/next-typesafe/commit/337bab53dfcd907af374f4bc7abc1060984a85d3))
-
+- remove incorrect version from changelog file ([337bab5](https://github.com/ZilvinasAbr/next-typesafe/commit/337bab53dfcd907af374f4bc7abc1060984a85d3))
 
 ### Features
 
-* add support for enum searchParams. ([ae776ef](https://github.com/ZilvinasAbr/next-typesafe/commit/ae776ef79e1345c9a743c89bebd7dd7bb7ea9247))
+- add support for enum searchParams. ([ae776ef](https://github.com/ZilvinasAbr/next-typesafe/commit/ae776ef79e1345c9a743c89bebd7dd7bb7ea9247))
 
 ## [0.2.2](https://github.com/ZilvinasAbr/next-typesafe/compare/v0.2.1...v0.2.2) (2025-08-23)
 

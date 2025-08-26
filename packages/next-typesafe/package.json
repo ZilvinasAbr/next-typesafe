@@ -11,12 +11,8 @@
       "require": "./dist/createPage.js"
     }
   },
-  "bin": {
-    "next-typesafe": "bin/cli.js"
-  },
   "files": [
-    "dist",
-    "bin"
+    "dist"
   ],
   "scripts": {
     "build": "tsc",

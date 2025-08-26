@@ -1,6 +1,5 @@
-import { createPage } from "next-typesafe";
-import { PageType } from "./_page-type";
+import { createPage } from 'next-typesafe';
 
-export default createPage<PageType>().page(async () => {
+export default createPage('/dashboard').page(async () => {
   return <div>Dashboard</div>;
 });

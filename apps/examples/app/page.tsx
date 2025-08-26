@@ -1,12 +1,11 @@
-import { createPage } from "next-typesafe";
-import * as z from "zod/v4";
-import { PageType } from "./_page-type";
+import { createPage } from 'next-typesafe';
+import * as z from 'zod/v4';
 
-export default createPage<PageType>()
+export default createPage('/')
   .searchParams(
     z.object({
       name: z.string().optional(),
-    })
+    }),
   )
   .page(async ({ searchParams }) => {
     const name = (await searchParams).name;

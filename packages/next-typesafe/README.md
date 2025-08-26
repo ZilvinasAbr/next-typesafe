@@ -2,18 +2,18 @@
 
 > ⚠️ **Early Beta Warning**: This package is in early beta. APIs may change frequently and breaking changes may occur in minor versions. Use with caution in production environments.
 
-**Bring full type-safety to Next.js App Router pages with automatic type generation and runtime validation.**
+**Bring full type-safety to Next.js App Router pages with runtime validation and automatic route type inference.**
 
-`next-typesafe` provides a type-safe wrapper for Next.js pages that validates route parameters and search parameters at runtime using Zod schemas, while automatically generating TypeScript interfaces for your routes.
+`next-typesafe` provides a type-safe wrapper for Next.js pages that validates route parameters and search parameters at runtime using Zod schemas, while leveraging Next.js's built-in route type generation for complete type safety.
 
 ## ✨ Features
 
 - 🎯 **Full Type Safety** - Get complete TypeScript support for route and search parameters
 - 🔍 **Runtime Validation** - Validate parameters using Zod schemas with detailed error handling
-- 🤖 **Automatic Type Generation** - CLI tool generates TypeScript interfaces for all your routes
-- 🚀 **Zero Config** - Works out of the box with Next.js App Router
+- 🚀 **Zero Config** - Works out of the box with Next.js App Router and generated types
 - 🔄 **Promise-based** - Compatible with Next.js 15+ async components
 - 📝 **IntelliSense** - Full autocomplete and type checking in your IDE
+- 🛡️ **Route Constraint** - Only allows valid routes defined in your Next.js app
 
 ## 🚀 Quick Start
 
@@ -23,35 +23,33 @@
 npm install next-typesafe zod
 ```
 
-### 1. Generate Page Types
+### 1. Set up Route Type Constraints
 
-Add a script to your `package.json`:
+Create a `next-typesafe.d.ts` file in your project root to enable route type constraints:
 
-```json
-{
-  "scripts": {
-    "typesafe": "next-typesafe generate-types"
+```typescript
+// next-typesafe.d.ts
+import type { AppRoutes } from "./.next/types/routes";
+
+declare global {
+  namespace NextTypesafe {
+    interface Register {
+      routes: AppRoutes;
+    }
   }
 }
+
+export {};
 ```
-
-Run the type generation:
-
-```bash
-npm run typesafe
-```
-
-This will scan your `app/` directory and generate `_page-type.ts` files next to each `page.tsx`.
 
 ### 2. Use in Your Pages
 
-Import the generated `PageType` and use it with `createPage`:
+Use `createPage` with your route path - TypeScript will only allow valid routes:
 
 ```typescript
 // app/search/page.tsx
 import { createPage } from 'next-typesafe';
 import { z } from 'zod';
-import type { PageType } from './_page-type';
 
 const searchParamsSchema = z.object({
   q: z.string().min(1),
@@ -59,7 +57,7 @@ const searchParamsSchema = z.object({
   category: z.array(z.string()).optional(),
 });
 
-export default createPage<PageType>()
+export default createPage("/search") // TypeScript enforces valid routes!
   .searchParams(searchParamsSchema)
   .page(async ({ searchParams }) => {
     const { q, page, category } = await searchParams;
@@ -81,9 +79,8 @@ export default createPage<PageType>()
 ```typescript
 // app/about/page.tsx
 import { createPage } from 'next-typesafe';
-import type { PageType } from './_page-type';
 
-export default createPage<PageType>()
+export default createPage("/about")
   .page(async () => {
     return <div>About Us</div>;
   });
@@ -95,16 +92,15 @@ export default createPage<PageType>()
 // app/posts/[slug]/page.tsx
 import { createPage } from 'next-typesafe';
 import { z } from 'zod';
-import type { PageType } from './_page-type';
 
 const paramsSchema = z.object({
   slug: z.string(),
 });
 
-export default createPage<PageType>()
+export default createPage("/posts/[slug]") // Route path automatically typed!
   .params(paramsSchema)
   .page(async ({ params }) => {
-    const { slug } = await params;
+    const { slug } = await params; // TypeScript knows slug: string
 
     return <h1>Post: {slug}</h1>;
   });
@@ -116,7 +112,6 @@ export default createPage<PageType>()
 // app/users/[id]/posts/page.tsx
 import { createPage } from 'next-typesafe';
 import { z } from 'zod';
-import type { PageType } from './_page-type';
 
 const paramsSchema = z.object({
   id: z.string().regex(/^\d+$/, "Must be numeric"),
@@ -128,12 +123,12 @@ const searchParamsSchema = z.object({
   limit: z.string().regex(/^\d+$/).transform(Number).optional(),
 });
 
-export default createPage<PageType>()
+export default createPage("/users/[id]/posts") // Fully type-safe route!
   .params(paramsSchema)
   .searchParams(searchParamsSchema)
   .page(async ({ params, searchParams }) => {
-    const { id } = await params;
-    const { status, sort, limit } = await searchParams;
+    const { id } = await params; // TypeScript knows: string
+    const { status, sort, limit } = await searchParams; // All fully typed!
 
     return (
       <div>
@@ -151,16 +146,16 @@ export default createPage<PageType>()
 ```typescript
 const searchParamsSchema = z.object({
   // Required string with validation
-  email: z.string().email("Invalid email format"),
+  email: z.string().email('Invalid email format'),
 
   // Optional with default value
-  theme: z.enum(["light", "dark"]).default("light"),
+  theme: z.enum(['light', 'dark']).default('light'),
 
   // String array (e.g., ?tags=react&tags=nextjs)
   tags: z.array(z.string()).optional(),
 
   // Transform string to number
-  page: z.string().regex(/^\d+$/).transform(Number).default("1"),
+  page: z.string().regex(/^\d+$/).transform(Number).default('1'),
 
   // Date validation
   from: z.string().datetime().optional(),
@@ -168,59 +163,62 @@ const searchParamsSchema = z.object({
   // Custom validation
   priority: z
     .string()
-    .refine((val) => ["low", "medium", "high"].includes(val), {
-      message: "Priority must be low, medium, or high",
+    .refine((val) => ['low', 'medium', 'high'].includes(val), {
+      message: 'Priority must be low, medium, or high',
     })
     .optional(),
 });
 ```
 
-## 🛠️ CLI Tool
+## 🛡️ Route Type Safety
 
-The `next-typesafe` CLI automatically generates TypeScript interfaces for your routes:
+`next-typesafe` leverages Next.js's built-in type generation to ensure you can only use routes that exist in your app.
 
-```bash
-npx next-typesafe generate-types
-```
+### How it works
 
-### Generated Types
-
-For a route like `app/users/[id]/posts/[slug]/page.tsx`, it generates:
+1. **Next.js generates route types** automatically in `.next/types/routes.d.ts`
+2. **You augment the library** with these types using module declaration
+3. **TypeScript enforces** only valid routes can be passed to `createPage`
 
 ```typescript
-// app/users/[id]/posts/[slug]/_page-type.ts
-// This file is auto-generated. Do not edit this file directly.
+// ✅ Valid route - TypeScript allows this
+createPage("/users/[id]/posts")
 
-export interface PageParams {
-  id: string;
-  slug: string;
-}
-
-export interface PageType {
-  params: PageParams;
-}
+// ❌ Invalid route - TypeScript error!
+createPage("/non-existent-route")
+// Error: Argument of type '"/non-existent-route"' is not assignable to parameter of type 'AppRoutes'
 ```
 
-For routes without parameters:
+### Setup
+
+Create `next-typesafe.d.ts` in your project root:
 
 ```typescript
-// app/about/_page-type.ts
-// This file is auto-generated. Do not edit this file directly.
+import type { AppRoutes } from "./.next/types/routes";
 
-export type PageType = Record<string, never>;
+declare global {
+  namespace NextTypesafe {
+    interface Register {
+      routes: AppRoutes;
+    }
+  }
+}
+
+export {};
 ```
 
 ## 🔧 API Reference
 
-### `createPage<PageType>()`
+### `createPage(path)`
 
-Creates a type-safe page builder. **Requires** a `PageType` generic parameter.
+Creates a type-safe page builder for the specified route path.
 
 ```typescript
-import type { PageType } from "./_page-type";
-
-const pageBuilder = createPage<PageType>();
+const pageBuilder = createPage("/users/[id]/posts");
 ```
+
+**Parameters:**
+- `path` - The route path (must be a valid route in your Next.js app when type augmentation is set up)
 
 ### `.searchParams(schema)`
 
@@ -240,9 +238,9 @@ Adds route parameter validation with a Zod schema.
 
 **Requirements:**
 
-- Must be a `z.object()` with string properties only
-- Must match the route's dynamic segments
-- TypeScript will enforce schema matches the generated `PageType`
+- Must be a `z.object()` with string-compatible properties
+- Should match the route's dynamic segments
+- TypeScript will infer parameter types from the route path
 
 ### `.page(component)`
 
@@ -255,44 +253,46 @@ Defines the page component.
 
 ## 🎯 Type Safety Features
 
-### Compile-time Validation
+### Route Validation
 
 ```typescript
-// ✅ This works - schema matches PageType
-const paramsSchema = z.object({
-  id: z.string(),
-  slug: z.string(),
-});
+// ✅ This works - valid route in your app
+createPage("/users/[id]/posts")
 
-// ❌ This fails - missing 'slug' parameter
-const badSchema = z.object({
-  id: z.string(),
-  // slug is missing!
-});
+// ❌ This fails - route doesn't exist
+createPage("/invalid/route")
+// TypeScript Error: Argument of type '"/invalid/route"' is not assignable to parameter of type 'AppRoutes'
 ```
 
-### Required Generics
+### Parameter Type Inference
 
 ```typescript
-// ❌ This fails - PageType generic is required
-createPage().page(() => <div>Hello</div>);
-
-// ✅ This works - PageType provided
-createPage<PageType>().page(() => <div>Hello</div>);
+// TypeScript automatically knows the parameter types from the route
+export default createPage("/users/[id]/posts/[slug]")
+  .params(z.object({
+    id: z.string(),    // TypeScript expects this parameter
+    slug: z.string(),  // TypeScript expects this parameter
+  }))
+  .page(async ({ params }) => {
+    const { id, slug } = await params; // Both typed as string
+    // Full TypeScript autocomplete and validation!
+  });
 ```
 
-### Parameter Type Safety
+### Search Parameters Type Safety
 
 ```typescript
-export default createPage<PageType>()
-  .params(paramsSchema)
-  .searchParams(searchParamsSchema)
-  .page(async ({ params, searchParams }) => {
-    // params and searchParams are fully typed!
-    const { id } = await params; // string
-    const { tags } = await searchParams; // string[] | undefined
-
-    // TypeScript autocomplete and validation works!
+export default createPage("/search")
+  .searchParams(z.object({
+    q: z.string(),
+    tags: z.array(z.string()).optional(),
+    page: z.string().transform(Number).default(1),
+  }))
+  .page(async ({ searchParams }) => {
+    const { q, tags, page } = await searchParams;
+    // q: string
+    // tags: string[] | undefined  
+    // page: number
   });
 ```
 
