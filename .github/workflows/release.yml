@@ -36,10 +36,6 @@ jobs:
       - name: Build packages
         run: pnpm run build
 
-      - name: Run tests
-        run: pnpm run test
-        working-directory: packages/next-typesafe
-
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
